@@ -1,45 +1,4 @@
-using Discord;
-using Microsoft.EntityFrameworkCore;
-
 namespace ModalBuilderUtil;
-
-public class DBModal
-{
-	public int DBModalId { get; set; }
-	public string? Title { get; set; }
-	public string? CustomId { get; set; }
-
-	public List<DbActionRow> ActionRows { get; set; } = new();
-
-	public DBModal() {}
-	public DBModal(ModalBuilder builder)
-	{
-		Title = builder.Title;
-		CustomId = builder.CustomId;
-		builder.Components?.ActionRows?.ForEach(x =>
-		{
-			var row = new DbActionRow();
-			x.Components.ForEach(x => row.Components.Add(x switch
-			{
-				ButtonComponent button => new DbComponent().FromButton(button),
-				SelectMenuComponent select => new DbComponent().FromSelectMenu(select),
-				TextInputComponent textInput => new DbComponent().FromTextInput(textInput),
-				_ => throw new NotSupportedException($"{x.Type} componets are unsupported.")
-			}));
-			ActionRows.Add(row);
-		});
-	}
-}
-
-public class DbActionRow
-{
-	public int DbActionRowId { get; set; }
-	
-	public int DBModalId { get; set; }
-	public DBModal Modal { get; set; }
-	
-	public List<DbComponent> Components { get; set; } = new();
-}
 
 public class DbComponent
 {
@@ -55,7 +14,7 @@ public class DbComponent
 	public string? Placeholder { get; set; }
 	public int? Min { get; set; }
 	public int? Max { get; set; }
-	
+
 	// Button
 	public ButtonStyle ButtonStyle { get; set; }
 	public string? Emote { get; set; }
@@ -68,7 +27,7 @@ public class DbComponent
 	public TextInputStyle TextInputStyle { get; set; }
 	public bool? Required { get; set; }
 	public string? Value { get; set; }
-	
+
 	public DbComponent FromButton(ButtonComponent button)
 	{
 		Type = ComponentType.Button;
@@ -81,7 +40,7 @@ public class DbComponent
 
 		return this;
 	}
-	
+
 	public DbComponent FromSelectMenu(SelectMenuComponent select)
 	{
 		Type = ComponentType.SelectMenu;
@@ -94,7 +53,7 @@ public class DbComponent
 
 		return this;
 	}
-	
+
 	public DbComponent FromTextInput(TextInputComponent text)
 	{
 		Type = ComponentType.TextInput;
@@ -106,28 +65,6 @@ public class DbComponent
 		TextInputStyle = text.Style;
 		Required = text.Required;
 		Value = text.Value;
-
-		return this;
-	}
-}
-
-public class DbSelectOption
-{
-	public int? DbSelectOptionId { get; set; }
-	public string? Label { get; set; }
-	public string? Value { get; set; }
-	public string? Description { get; set; }
-	public string? Emote { get; set; }
-	public bool? Default { get; set; }
-	
-	public DbSelectOption FromSelectOption(SelectMenuOption option)
-	{
-		Label = option.Label;
-		Value = option.Value;
-		Description = option.Description;
-		Emote = option.Emote.Name;
-		Description = option.Description;
-		Default = option.IsDefault;
 
 		return this;
 	}

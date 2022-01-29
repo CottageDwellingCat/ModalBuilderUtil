@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-
 namespace ModalBuilderUtil;
 
 /// <summary>
@@ -17,7 +15,7 @@ public class OddlyFluffyDbContext : DbContext
 	/// <summary>
 	/// 	Just a little fluffy - probably fine if you eat around it.
 	/// </summary>
-	public DbSet<DBModal> Modals { get; set; }
+	public DbSet<DbModal> Modals { get; set; }
 	// Feeling less jokey
 	public DbSet<DbActionRow> ActionRows { get; set; }
 	public DbSet<DbComponent> Components { get; set; }
