@@ -68,4 +68,52 @@ public class DbComponent
 
 		return this;
 	}
+
+	public string GenerateBuilder()
+	{
+		string code;
+
+		switch (Type)
+		{
+			case ComponentType.Button:
+				{
+					code = "    .AddButton(new() ButtonBuilder\n" +
+						$"        .WithCustomId(\"{CustomId}\")" +
+						$"        .WithLabel(\"{Label}\")" +
+						$"        .WithStyle(ButtonStyle.{ButtonStyle})\n";
+					if (Disabled != null) code += $"        .WithDisabled({Disabled})\n";
+					if (!string.IsNullOrWhiteSpace(Emote)) code += $"        .WithEmote(Emote.Parse{Emote})\n";
+					if (!string.IsNullOrWhiteSpace(Url)) code += $"        .WithUrl(\"{Url}\")\n";
+				}
+				break;
+			case ComponentType.SelectMenu:
+				{
+					code = "    .AddSelectMenu(new SelectMenuBuilder()\n" +
+						$"        .WithCustomId(\"{CustomId}\")\n";
+					if (!string.IsNullOrWhiteSpace(Placeholder)) code += $"        .WithPlaceholder(\"{Placeholder}\")\n";
+					if (Min is not null) code += $"        .WithMinValues({Min})\n";
+					if (Max is not null) code += $"        .WithMaxValues({Max})\n";
+					if (Disabled != null) code += $"        .WithDisabled({Disabled})\n";
+					SelectOptions.ForEach(x => code += x.GenerateBuilder());
+				}
+				break;
+			case ComponentType.TextInput:
+				{
+					code = "    .AddTextInput(new TextInputBuilder()\n" +
+						$"        .WithLabel(\"{Label}\")\n" +
+						$"        .WithStyle(TextInputStyle.{TextInputStyle})\n" +
+						$"        .WithCustomId(\"{CustomId}\")\n";
+					if (Min is not null) code += $"        .WithMinLength({Min})\n";
+					if (Max is not null) code += $"        .WithMaxLength({Max})\n";
+					if (!string.IsNullOrWhiteSpace(Placeholder)) code += $"        .WithPlaceholder(\"{Placeholder}\")\n";
+					if (Required != null) code += $"        .WithRequired({Required});\n";
+				}
+				break;
+			default:
+				code = "";
+				break;
+		}
+
+		return code[..^1] + ")\n";
+	}
 }

@@ -20,4 +20,15 @@ public class DbSelectOption
 
 		return this;
 	}
+	
+	public string GenerateBuilder()
+	{
+		string code = "        .AddOption(new SelectMenuOptionBuilder()" +
+			$"            .WithLabel(\"{Label}\")\n" +
+			$"            .WithValue(\"{Value}\n)\n";
+			if (!string.IsNullOrWhiteSpace(Description)) code += $"            .WithDescription(\"{Description}\")\n";
+			if (!string.IsNullOrWhiteSpace(Emote)) code += $"            .WithEmote(Emote.Parse(\"{Description}\"))\n";
+			if (Default is not null) code += $"            .WithDefault({Default})\n";
+		return code[..^1] + ")\n";
+	}
 }

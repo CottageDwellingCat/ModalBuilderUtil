@@ -2,9 +2,10 @@ namespace ModalBuilderUtil;
 
 public class DbModal
 {
-	public int DBModalId { get; set; }
+	public int DbModalId { get; set; }
 	public string? Title { get; set; }
 	public string? CustomId { get; set; }
+	public ulong UserID { get; set; }
 
 	public List<DbActionRow> ActionRows { get; set; } = new();
 
@@ -25,5 +26,15 @@ public class DbModal
 			}));
 			ActionRows.Add(row);
 		});
+	}
+	
+	public string GenerateBuilder()
+	{
+		string code = "";
+		code = "var mb = new ModalBuilder();\n" +
+			$"    .WithTitle(\"{Title}\")\n" +
+			$"    .WithCustomId(\"{CustomId}\")\n";
+		ActionRows.ForEach(x => x.Components.ForEach(x => code += x.GenerateBuilder()));
+		return code[..^1] + ';';
 	}
 }
