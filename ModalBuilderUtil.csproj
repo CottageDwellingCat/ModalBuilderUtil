@@ -31,11 +31,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="\home\cat\code\cs\discord.net-labs\src\Discord.Net.Rest\Discord.Net.Rest.csproj" />
-    <ProjectReference Include="\home\cat\code\cs\discord.net-labs\src\Discord.Net.Core\Discord.Net.Core.csproj" />
-    <ProjectReference Include="\home\cat\code\cs\discord.net-labs\src\Discord.Net.Webhook\Discord.Net.Webhook.csproj" />
-    <ProjectReference Include="\home\cat\code\cs\discord.net-labs\src\Discord.Net.Commands\Discord.Net.Commands.csproj" />
-    <ProjectReference Include="\home\cat\code\cs\discord.net-labs\src\Discord.Net.WebSocket\Discord.Net.WebSocket.csproj" />
-    <ProjectReference Include="\home\cat\code\cs\discord.net-labs\src\Discord.Net.Interactions\Discord.Net.Interactions.csproj" />
+    <ProjectReference Include="..\discord.net-labs\src\Discord.Net.Rest\Discord.Net.Rest.csproj" />
+    <ProjectReference Include="..\discord.net-labs\src\Discord.Net.Core\Discord.Net.Core.csproj" />
+    <ProjectReference Include="..\discord.net-labs\src\Discord.Net.Webhook\Discord.Net.Webhook.csproj" />
+    <ProjectReference Include="..\discord.net-labs\src\Discord.Net.Commands\Discord.Net.Commands.csproj" />
+    <ProjectReference Include="..\discord.net-labs\src\Discord.Net.WebSocket\Discord.Net.WebSocket.csproj" />
+    <ProjectReference Include="..\discord.net-labs\src\Discord.Net.Interactions\Discord.Net.Interactions.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Update="clientSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
