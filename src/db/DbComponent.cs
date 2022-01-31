@@ -69,7 +69,7 @@ public class DbComponent
 		return this;
 	}
 
-	public string GenerateBuilder()
+	public string GenerateCode()
 	{
 		string code;
 

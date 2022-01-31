@@ -27,14 +27,40 @@ public class DbModal
 			ActionRows.Add(row);
 		});
 	}
-	
-	public string GenerateBuilder()
+
+	public string GenerateCode()
 	{
 		string code = "";
 		code = "var mb = new ModalBuilder();\n" +
 			$"    .WithTitle(\"{Title}\")\n" +
 			$"    .WithCustomId(\"{CustomId}\")\n";
-		ActionRows.ForEach(x => x.Components.ForEach(x => code += x.GenerateBuilder()));
-		return code[..^1] + ';';
+		ActionRows.ForEach(x => x.Components.ForEach(x => code += x.GenerateCode()));
+		return code[..^1] + ";\n";
+	}
+
+	public ModalBuilder GetBuilder()
+	{
+		ModalBuilder mb = new()
+		{
+			CustomId = CustomId,
+			Title = Title,
+		};
+
+		mb.AddComponents(ActionRows
+			.SelectMany(x => x.Components)
+			.Select(x => x.Type switch
+			{
+				ComponentType.Button => (IMessageComponent)new ButtonBuilder(x.Label, x.CustomId, x.ButtonStyle, x.Url,
+					Emote.Parse(x.Emote), x.Disabled ?? false).Build(),
+				ComponentType.SelectMenu => (IMessageComponent)new SelectMenuBuilder(x.CustomId,
+					x.SelectOptions.Select(x => new SelectMenuOptionBuilder(x.Label, x.Value, x.Description,
+					Emote.Parse(x.Emote), x.Default ?? false)).ToList(), x.Placeholder, x.Max ?? 1, x.Min ?? 1,
+					x.Disabled ?? false).Build(),
+				ComponentType.TextInput => (IMessageComponent)new TextInputBuilder(x.Label, x.CustomId, x.TextInputStyle,
+					x.Placeholder, x.Min, x.Max, x.Required, x.Value).Build(),
+				_ => throw new NotSupportedException("That component type is not supported.")
+			}).ToList(), 0);
+
+		return mb;
 	}
 }

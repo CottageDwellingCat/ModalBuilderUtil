@@ -19,7 +19,7 @@ public class Program
 	private bool firstReady = true;
 	public static async Task Main() => await new Program().MainAsync();
 
-	private ServiceProvider services = new ServiceCollection()
+	private readonly ServiceProvider services = new ServiceCollection()
 		.AddDbContext<OddlyFluffyDbContext>(ServiceLifetime.Transient)
 		.AddSingleton(JsonSerializer.Deserialize<ClientSettings>(File.ReadAllText("ClientSettings.json")))
 		.AddSingleton(new LoggingService(LogLevel))
@@ -36,6 +36,7 @@ public class Program
 		var logger = services.GetRequiredService<LoggingService>();
 
 		commands.AddTypeConverter<DbModal>(new DbModalTypeConverter());
+		commands.AddTypeConverter<DbComponent>(new DbComponentTypeConverter());
 		await commands.AddModulesAsync(Assembly.GetExecutingAssembly(), services);
 
 		client.Ready += async () =>
